@@ -1,4 +1,4 @@
-# Paper under review
+# Quantized ECG Representations Unlock Comprehensive Cardiac Intelligence (under review)
 
 
 
