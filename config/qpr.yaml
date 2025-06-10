@@ -1,0 +1,100 @@
+### pretrain && finetune configuration
+
+root_ptbxl500: "/mnt/mydisk1/dataset/ptbxl-500/"
+root_ptbxl100: "/mnt/mydisk1/dataset/ptbxl/"
+root_g12ec: "/mnt/mydisk1/dataset/g12ec"
+root_ludb: "/mnt/mydisk1/dataset/LUDB/"
+
+# mimic datasets after preprocessing, we slice the original data into 6 parts (preprocessing in batch)
+mimic_path:
+  - "/root/pretrain/mimic/data92827-1.npy"
+  - "/root/pretrain/mimic/data93085-2.npy"
+  - "/root/pretrain/mimic/data93355-3.npy"
+  - "/root/pretrain/mimic/data93151-4.npy"
+  - "/root/pretrain/mimic/data62002-5.npy"
+  - "/root/pretrain/mimic/data46424-6.npy"
+mimic_size:
+  - 92827
+  - 93085
+  - 93355
+  - 93151
+  - 62002
+  - 46424
+
+finetune_pretrained_qpr: "/home/wzr/AI/VAE/VQ4ECG/results/pretrain_model_pth/experiment-6_vqvae_iter_50.pth"
+finetune_pretrained_lead_transformer: "/home/wzr/AI/VAE/VQ4ECG/results/pretrain_model_pth/experiment-6_lead_transformer_iter_50.pth"
+finetune_model_save_path: "/home/wzr/AI/VAE/VQ4ECG/results/finetune_model_pth/ludb/finetune-full"
+finetune_log_path: "/home/wzr/AI/VAE/VQ4ECG/results/log/finetune/ludb/finetune-full"
+
+# finetune process ~= imputation process
+imputation_pretrained_qpr: "/home/wzr/AI/VAE/VQ4ECG/results/pretrain_model_pth/experiment-7_vqvae_final.pth"
+imputation_pretrained_lead_transformer: "/home/wzr/AI/VAE/VQ4ECG/results/pretrain_model_pth/experiment-7_lead_transformer_final.pth"
+imputation_model_save_path: "/home/wzr/AI/VAE/VQ4ECG/results/finetune_model_pth/g12ec/cfm60"
+imputation_log_path: "/home/wzr/AI/VAE/VQ4ECG/results/log/finetune/g12ec/cfm60"
+
+# classification after pretrain, using indices + feature
+classification_qpr: "/home/wzr/AI/VAE/VQ4ECG/results/pretrain_model_pth/experiment-6_vqvae_iter_50.pth"
+classification_model_save_path: "/home/wzr/AI/VAE/VQ4ECG/results/classification_model_pth/ptbxl-500/few-shot/all/pc"
+classification_log_path: "/home/wzr/AI/VAE/VQ4ECG/results/log/classification/ptbxl-500/few-shot/all/pc"
+
+# prediction after finetune, using indices
+prediction_finetuned_qpr: "/home/wzr/AI/VAE/VQ4ECG/results/finetune_model_pth/ptbxl-500/finetune-10.2/vqvae_final.pth"
+prediction_finetuned_lead_transformer: "/home/wzr/AI/VAE/VQ4ECG/results/pretrain_model_pth/ptbxl-100/lead_transformer_iter_34.pth"
+prediction_model_save_path: "/home/wzr/AI/VAE/VQ4ECG/results/prediction_model_pth/ptbxl-500/gpt"
+prediction_log_path: "/home/wzr/AI/VAE/VQ4ECG/results/log/prediction/ptbxl-500/gpt"
+
+# segmentation after finetune
+segmentation_qpr: "/home/wzr/AI/VAE/VQ4ECG/results/finetune_model_pth/ludb/finetune-full/vqvae_final.pth"
+segmentation_model_save_path: "/home/wzr/AI/VAE/VQ4ECG/results/segmentation_model_pth/ludb/seg-unet-signal"
+segmentation_log_path: "/home/wzr/AI/VAE/VQ4ECG/results/log/segmentation/ludb/seg-unet-signal"
+
+# checkpoint path
+checkpoint_path: "/home/wzr/AI/VAE/VQ4ECG/results/checkpoint/all_data_test.pth"
+
+
+TASKS_ptbxl:
+  - "all"
+  - "diagnostic"
+  - "subdiagnostic"
+  - "superdiagnostic"
+  - "form"
+  - "rhythm"
+  
+folder_group:
+  - "/val-1_test-2/"
+  - "/val-3_test-4/"
+  - "/val-5_test-6/"
+  - "/val-7_test-8/"
+  - "/val-9_test-10/"
+
+npy_files:
+  - "X_train.npy"
+  - "y_train.npy"
+  - "X_test.npy"
+  - "y_test.npy"
+  - "X_val.npy"
+  - "y_val.npy"
+
+
+MULTICLASS_LABELS_INDEX:
+   "Normal": 
+     "ptbxl-500": 46
+     "g12ec": 0
+   "AF": 
+     "ptbxl-500": 4
+     "g12ec": 6
+   "IAVB": 
+     "ptbxl-500": 0
+     "g12ec": 22
+   "LBBB": 
+     "ptbxl-500": 11
+     "g12ec": 20
+   "RBBB": 
+     "ptbxl-500": 12
+     "g12ec": 5
+   "PAC": 
+     "ptbxl-500": 49
+     "g12ec": 17
+   "PVC": 
+     "ptbxl-500": 54
+     "g12ec": 11
